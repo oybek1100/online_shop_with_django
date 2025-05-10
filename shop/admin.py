@@ -1,4 +1,19 @@
 from django.contrib import admin
-from .models import Product
+from .models import Product , Category , OrderDetail
+from django.contrib.auth.models import User, Group
 
-admin.site.register(Product)
+
+admin.site.register(Category)
+admin.site.register(OrderDetail)
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'price', 'discount' ,'category' , 'created_at']
+    list_filter = ['price']
+
+admin.site.site_header = "My Shop Admin"
+# admin.site.site_title = "My Shop Admin Portal"
+admin.site.index_title = "Welcome to My Shop Admin Portal"
+ 
+
+admin.site.unregister(User)
+admin.site.unregister(Group)

@@ -6,3 +6,10 @@ class OrderForm(forms.ModelForm):
         model = OrderDetail
         exclude = ['created_at', 'updated_at' , 'product']
 
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+

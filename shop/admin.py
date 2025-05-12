@@ -7,7 +7,7 @@ admin.site.register(Category)
 admin.site.register(OrderDetail)
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'price', 'discount' ,'category' , 'created_at']
+    list_display = ['name', 'price', 'discount' ,'category' , 'created_at' , 'quantity']
     list_filter = ['price']
 
 admin.site.site_header = "My Shop Admin"

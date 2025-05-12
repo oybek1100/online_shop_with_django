@@ -53,7 +53,14 @@
                 <div class="row gx-4 gx-lg-5 align-items-center">
                     <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{product.image.url}}" alt="..." /></div>
                     <div class="col-md-6">
-                        <div class="small mb-1">Rating: 124 </div>
+                        <a href="{% url 'update_product' product.id %}">
+                            <button type="button" class="btn btn-success">update</button>
+                        </a>
+                        <a href="{% url 'delete_product' product.id %}">
+                            <button type="button" class="btn btn-danger">delete</button>
+                        </a>
+                        
+                        <div class="small mb-1">Quantity {{product.quantity}} </div>
                         <h1 class="display-5 fw-bolder">{{product.name}}</h1>
                         <div class="fs-5 mb-5">
 
@@ -91,6 +98,19 @@
                                    
                                     <input type="submit" class="btn btn-success" value="Send">
                                   </div>
+    
+                                  <div>
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                            {% if message.tags == 'error' %}
+                                                <div class="alert alert-danger">{{ message }}</div>
+                                            {% else %}
+                                                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                  </div> 
+
                               </form>
                            
                         </div>
@@ -155,6 +175,8 @@
                            
                             <input type="text" class="btn btn-success" value="Send">
                           </div>
+                     
+
                       </form>
 
                     </div>

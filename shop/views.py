@@ -1,7 +1,9 @@
 from django.shortcuts import render , get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Product, Category   , OrderDetail
-from .forms import OrderForm
+from .forms import OrderForm , ProductForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -9,7 +11,7 @@ def index(request, category_id=None):
     categories = Category.objects.all()
     search_query = request.GET.get('search')
     
-    products = Product.objects.all()  # Avval barcha mahsulotlar olinadi
+    products = Product.objects.all()  
 
     if category_id:
         products = products.filter(category_id=category_id)  # oldingi product list ustidan filtrlanadi
@@ -39,12 +41,67 @@ def order_detail(request,pk):
         if form.is_valid():
             order = form.save(commit=False)
             order.product = product
-            order.save()
-            return redirect('index')
+            if product.quantity < order.quantity:
+                messages.add_message(
+                    request, messages.ERROR, 'Siz so‘ragan mahsulot miqdori yetarli emas')
+                
+            else:
+                product.quantity -= order.quantity
+                product.save()
+                order.total_price = product.price * order.quantity
+                order.save()
+                messages.add_message(
+                    request, messages.SUCCESS, 'Sizning buyurtmangiz qabul qilindi')
+                return redirect('product_detail', product_id=product.id)
+              
     context = {
         'form':form,
         'product':product
     }
             
     return render(request,'shop/detail.html',context = context)
+
+
+def add_product(request):
+    form = ProductForm()
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.add_message(
+                request, messages.SUCCESS, 'Mahsulot muvaffaqiyatli qo‘shildi')
+            return redirect('index')
+    context = {
+        'form': form
+    }
+    return render(request, 'shop/add_product.html', context)
+
+
+@login_required
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        product.delete()
+        messages.add_message(
+            request, messages.SUCCESS, 'Mahsulot muvaffaqiyatli o‘chirildi')
+        return redirect('index')
+    return render(request, 'shop/delete_product.html', {'product': product})
+
+
+def update_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    form = ProductForm(instance=product)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.add_message(
+                request, messages.SUCCESS, 'Mahsulot muvaffaqiyatli yangilandi')
+            return redirect('index')
+    context = {
+        'form': form,
+        'product': product
+    }
+    return render(request, 'shop/update_product.html', context)
+    
        

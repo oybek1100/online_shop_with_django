@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Product , Category , OrderDetail
-from django.contrib.auth.models import User, Group
+from .models import Product , Category , OrderDetail  , Comment
+from django.contrib.auth.models import User, Group 
 
 
 admin.site.register(Category)
 admin.site.register(OrderDetail)
+admin.site.register(Comment)
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'discount' ,'category' , 'created_at' , 'quantity']

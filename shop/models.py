@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 
 # Create your models here.
 
@@ -24,7 +25,13 @@ class Product(baseModel):
     image = models.ImageField(upload_to='products/')
     discount = models.IntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products' , null=True, blank=True)
-    quantity = models.IntegerField(default=1 , blank =True)
+    quantity = models.IntegerField(default=1 , blank =True),
+
+    @property
+    def avg_rating(self):
+        from django.db.models import Avg
+        return self.comments.aggregate(Avg('rating'))['rating__avg'] or 0
+    
 
     @property
     def discounted_price(self):
@@ -34,6 +41,9 @@ class Product(baseModel):
     
     class Meta:
         ordering = ['-created_at']
+    
+    def __str__(self):
+        return self.name
 
 
 class OrderDetail(models.Model):
@@ -46,4 +56,21 @@ class OrderDetail(models.Model):
     def __str__(self):
         return f"{self.product.name} - {self.quantity}"
     
+class Comment(baseModel):
+    class RatingChoices(models.IntegerChoices):
+        ONE = 1, '1 Star'
+        TWO = 2, '2 Stars'
+        THREE = 3, '3 Stars'
+        FOUR = 4, '4 Stars'
+        FIVE = 5, '5 Stars'
+        
+    def __str__(self):
+        return f"{self.product.name} - {self.rating} Stars"
+
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    comment = models.TextField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
+    rating = models.IntegerField(choices=RatingChoices.choices, default=RatingChoices.THREE.value)
+
     

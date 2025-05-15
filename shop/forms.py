@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, OrderDetail
+from .models import Product, OrderDetail , Comment
 
 class OrderForm(forms.ModelForm):
     class Meta:
@@ -12,4 +12,9 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = '__all__'
 
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = '__all__'
 

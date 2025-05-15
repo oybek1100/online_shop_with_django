@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index , add_product , delete_product , update_product
+from .views import index , add_product , delete_product , update_product , add_comment
 from .views import product_detail , OrderDetail # Import the details view from views.py
 from . import views 
 
@@ -11,5 +11,5 @@ urlpatterns = [
     path('add_product/', views.add_product, name='add_product'),
     path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
     path('update_product/<int:product_id>/', views.update_product, name='update_product'),
-  
+    path('add_comment/<int:pk>/', views.add_comment, name='add_comment'),
 ]

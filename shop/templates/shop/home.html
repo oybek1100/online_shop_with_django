@@ -102,11 +102,16 @@
                                         <h5 class="fw-bolder">{{product.name}}</h5>
                                         <!-- Product reviews-->
                                         <div class="d-flex justify-content-center small text-warning mb-2">
+                                            <div class="d-flex justify-content-center small text-warning mb-2">
+                                                <div class="product-info">
+                                                    <p>Average Rating: {{ product.avg_rating|default:"0"|floatformat:1 }}/5</p>
+                                                </div>
+                                            </div>
+                                                                                    {% comment %} <div class="bi-star-fill"></div>
                                             <div class="bi-star-fill"></div>
                                             <div class="bi-star-fill"></div>
                                             <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div> {% endcomment %}
                                         </div>
                                         <!-- Product price-->
                                          {% if product.discount %}
@@ -118,14 +123,12 @@
                                     </div>
                                 </div>
                                 <!-- Product actions-->
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <a class="btn btn-outline-dark mt-auto" href="{% url 'product_detail' product_id=product.id %}">
-                                        View product
-                                    </a>
-                                
-                                    
+                              <div class="card-footer p-4 pt-0 border-top-0 bg-transparent d-flex justify-content-center">
+                                <a class="btn btn-outline-dark mt-auto" href="{% url 'product_detail' product_id=product.id %}">
+                                    View product
+                                </a>
                                 </div>
-                            </div>
+                                </div>
                         </div>
                     {% endfor %}
                     

@@ -1,7 +1,7 @@
 from django.shortcuts import render , get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Product, Category   , OrderDetail
-from .forms import OrderForm , ProductForm
+from .models import Product, Category   , OrderDetail , Comment
+from .forms import OrderForm , ProductForm , CommentForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -103,5 +103,33 @@ def update_product(request, product_id):
         'product': product
     }
     return render(request, 'shop/update_product.html', context)
+
+
+def add_comment(request, pk):
+    product = get_object_or_404(Product, id=pk)
+    if request.method == "POST":
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        comment_text = request.POST.get('comment')
+        rating = request.POST.get('rating')
+
+        if name and email and comment_text:
+            Comment.objects.create(
+                product=product,
+                name=name,
+                email=email,
+                comment=comment_text,
+                rating=rating 
+            )
+            messages.success(request, "Comment added successfully!")
+        else:
+            messages.error(request, "Fill all fields!")
+        
+        return redirect('product_detail',   product_id=product.id)
+    
+    return render('')
+
+
+
     
        

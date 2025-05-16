@@ -15,6 +15,7 @@
         <link href="{% static 'shop/css/styles.css' %}" rel="stylesheet" />
     </head>
     <body>
+
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container px-4 px-lg-5">
@@ -64,16 +65,14 @@
             </div>
             <div class="row">
                 <div class="col-1">
-                    <a class="btn btn-outline-dark mt-auto" href="#"> Expensive </a>
+                    <a class="btn btn-outline-dark mt-auto" href="{% url 'expensive_product' %}"> Expensive </a>
                 </div>
 
                 <div class="col-1">
-                    <a class="btn btn-outline-dark mt-auto" href="#"> Cheap </a>
+                    <a class="btn btn-outline-dark mt-auto" href="{% url 'cheap_product' %}"> Cheap </a>
                 </div>
 
-                <div class="col-1">
-                    <a class="btn btn-outline-dark mt-auto" href="#"> Likes </a>
-                </div>
+              
                <a class="btn btn-outline-dark btn-sm w-auto d-inline-block text-nowrap" href="{% url 'add_product' %}">
                     Add Product
                 </a>
@@ -93,7 +92,7 @@
                                 {% endif %}
                                 <!-- Product image-->
                                 <a href="{% url 'product_detail' product_id=product.id %}">
-                                    <img class="card-img-top" src="{{product.image.url}}" alt="..." / >
+                                    <img class="card-img-top" src="{{product.image.url}}" alt="..."  >
                                 </a>
                                 <!-- Product details-->
                                 <div class="card-body p-4">
@@ -101,13 +100,12 @@
                                         <!-- Product name-->
                                         <h5 class="fw-bolder">{{product.name}}</h5>
                                         <!-- Product reviews-->
-                                        <div class="d-flex justify-content-center small text-warning mb-2">
-                                            <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="">
+                                            <div class="">
                                                 <div class="product-info">
-                                                    <p>Average Rating: {{ product.avg_rating|default:"0"|floatformat:1 }}/5</p>
+                                                    <p>Average Rating: {{ product.avg_rating|default:"0"|floatformat:2 }}</p>
                                                 </div>
-                                            </div>
-                                                                                    {% comment %} <div class="bi-star-fill"></div>
+                                            </div>{% comment %} <div class="bi-star-fill"></div>
                                             <div class="bi-star-fill"></div>
                                             <div class="bi-star-fill"></div>
                                             <div class="bi-star-fill"></div>

@@ -31,7 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # 'baton',
+    'jazzmin',
     'django.contrib.admin',
+    # 'baton.autodiscover',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop',
     'widget_tweaks',
+    'adminsortable2',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +133,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# BATON = {
+#     'SITE_HEADER': 'My Admin Panel',
+#     'SITE_TITLE': 'Admin',
+#     'INDEX_TITLE': 'Welcome to the admin',
+#     'MENU': (
+#         {'label': 'Home', 'url': '/', 'icon': 'fa fa-home'},
+#         {'model': 'auth.user'},
+#         {'app': 'shop'},
+#     ),
+# }

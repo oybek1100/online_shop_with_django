@@ -4,12 +4,14 @@ from .models import Product, Category   , OrderDetail , Comment
 from .forms import OrderForm , ProductForm , CommentForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Avg
 
 
 # Create your views here.
 def index(request, category_id=None):
     categories = Category.objects.all()
     search_query = request.GET.get('search')
+    
     
     products = Product.objects.all()  
 
@@ -18,6 +20,11 @@ def index(request, category_id=None):
 
     if search_query:
         products = products.filter(name__icontains=search_query)  # yana ustidan search bo‘yicha filtrlanadi
+
+
+
+
+
 
     context = {
         'products': products,
@@ -128,6 +135,23 @@ def add_comment(request, pk):
         return redirect('product_detail',   product_id=product.id)
     
     return render('')
+
+
+def expensive_product(request):
+    products = Product.objects.order_by('-price')
+    return render(request, 'shop/home.html', {'products': products})
+
+def cheap_product(request):
+    products = Product.objects.order_by('price')
+    return render(request, 'shop/home.html', {'products': products})
+
+
+
+
+
+
+
+
 
 
 

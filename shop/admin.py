@@ -9,12 +9,11 @@ admin.site.register(Comment)
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'discount' ,'category' , 'created_at' , 'quantity']
-    list_filter = ['price']
+    list_filter = ['price' , 'category' , 'created_at']
 
 admin.site.site_header = "My Shop Admin"
 # admin.site.site_title = "My Shop Admin Portal"
 admin.site.index_title = "Welcome to My Shop Admin Portal"
  
 
-admin.site.unregister(User)
-admin.site.unregister(Group)
+

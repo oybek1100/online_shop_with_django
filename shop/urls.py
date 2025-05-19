@@ -2,6 +2,7 @@ from django.urls import path
 from .views import index , add_product , delete_product , update_product , add_comment
 from .views import product_detail , OrderDetail , expensive_product , cheap_product 
 from . import views 
+app_name = 'shop'
 
 urlpatterns = [
     path('', index, name='index'), 

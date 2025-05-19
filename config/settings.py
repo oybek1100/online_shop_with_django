@@ -34,8 +34,8 @@ INSTALLED_APPS = [
     # 'baton',
     'jazzmin',
     'django.contrib.admin',
-    # 'baton.autodiscover',
     'django.contrib.auth',
+    # 'baton.autodiscover',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'shop',
     'widget_tweaks',
     'adminsortable2',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -135,6 +136,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+AUTH_USER_MODEL = "users.CustomUser"    
 
 # BATON = {
 #     'SITE_HEADER': 'My Admin Panel',

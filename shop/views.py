@@ -5,6 +5,7 @@ from .forms import OrderForm , ProductForm , CommentForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
+from decimal import Decimal
 
 
 # Create your views here.
@@ -36,38 +37,56 @@ def index(request, category_id=None):
 def product_detail(request, product_id):
     try:
         product = Product.objects.get(id=product_id)
-        return render(request, 'shop/detail.html', {'product': product})
+        related_products = Product.objects.filter(category = product.category).exclude(id=product_id)
+        context = {
+            'product': product,
+            'related_products': related_products
+        }
+        return render(request, 'shop/detail.html' , context = context)
     except Product.DoesNotExist:
         return render(request, '')
+    
 
-def order_detail(request,pk):
-    product = get_object_or_404(Product,pk=pk)
+
+def order_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
     form = OrderForm()
+    
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save(commit=False)
             order.product = product
+            
+            # Narxni to'g'ri formatga o'tkazish
+            try:
+                if hasattr(product.price, '__iter__'):  # Tuple yoki list bo'lsa
+                    product_price = Decimal(str(product.price[0]))
+                else:
+                    product_price = Decimal(str(product.price))
+            except (TypeError, ValueError, IndexError) as e:
+                messages.error(request, f'Narx formatida xatolik: {str(e)}')
+                return render(request, 'shop/order_detail.html', {
+                    'product': product,
+                    'form': form
+                })
+            
             if product.quantity < order.quantity:
-                messages.add_message(
-                    request, messages.ERROR, 'Siz so‘ragan mahsulot miqdori yetarli emas')
-                
+                messages.error(request, 'Siz so‘ragan mahsulot miqdori yetarli emas')
             else:
                 product.quantity -= order.quantity
                 product.save()
-                order.total_price = product.price * order.quantity
+                
+                order.total_price = product_price * Decimal(str(order.quantity))
                 order.save()
-                messages.add_message(
-                    request, messages.SUCCESS, 'Sizning buyurtmangiz qabul qilindi')
-                return redirect('product_detail', product_id=product.id)
-              
-    context = {
-        'form':form,
-        'product':product
-    }
-            
-    return render(request,'shop/detail.html',context = context)
-
+                
+                messages.success(request, 'Sizning buyurtmangiz qabul qilindi')
+                return redirect('shop:product_detail', product_id=product.id)
+    
+    return render(request, 'shop/order_detail.html', {
+        'product': product,
+        'form': form
+    })
 
 def add_product(request):
     form = ProductForm()
@@ -77,7 +96,7 @@ def add_product(request):
             form.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Mahsulot muvaffaqiyatli qo‘shildi')
-            return redirect('index')
+            return redirect('shop:index')
     context = {
         'form': form
     }
@@ -91,7 +110,7 @@ def delete_product(request, product_id):
         product.delete()
         messages.add_message(
             request, messages.SUCCESS, 'Mahsulot muvaffaqiyatli o‘chirildi')
-        return redirect('index')
+        return redirect('shop:index')
     return render(request, 'shop/delete_product.html', {'product': product})
 
 
@@ -104,7 +123,7 @@ def update_product(request, product_id):
             form.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Mahsulot muvaffaqiyatli yangilandi')
-            return redirect('index')
+            return redirect('shop:index')
     context = {
         'form': form,
         'product': product
@@ -132,7 +151,7 @@ def add_comment(request, pk):
         else:
             messages.error(request, "Fill all fields!")
         
-        return redirect('product_detail',   product_id=product.id)
+        return redirect('shop:product_detail',   product_id=product.id)
     
     return render('')
 

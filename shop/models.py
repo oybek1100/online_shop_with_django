@@ -25,7 +25,7 @@ class Product(baseModel):
     image = models.ImageField(upload_to='products/')
     discount = models.IntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products' , null=True, blank=True)
-    quantity = models.IntegerField(default=1 , blank =True),
+    quantity = models.IntegerField(default=1 , blank =True)
 
     @property
     def avg_rating(self):

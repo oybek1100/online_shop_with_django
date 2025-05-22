@@ -78,22 +78,39 @@
                 <div class="row flex-between-center mb-2">
                   <div class="col-auto">
                     <h5>Register</h5>
+                    <div>
+
+                      {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                      {% endif %}
+
+                    </div>
                   </div>
                   <div class="col-auto fs--1 text-600"><span class="mb-0 undefined">Have an account?</span> <span><a href="../../../pages/authentication/simple/login.html">Login</a></span></div>
                 </div>
-                <form>
+                <form method="post" action="{% url 'users:register' %}">
+                  {% csrf_token %}
+                
                   <div class="mb-3">
-                    <input class="form-control" type="text" autocomplete="on" placeholder="Name" />
-                  </div>
-                  <div class="mb-3">
-                    <input class="form-control" type="email" autocomplete="on" placeholder="Email address" />
+                    <input class="form-control" name="email" type="email" autocomplete="on" placeholder="Email address" />
                   </div>
                   <div class="row gx-2">
                     <div class="mb-3 col-sm-6">
-                      <input class="form-control" type="password" autocomplete="on" placeholder="Password" />
+                      <input class="form-control" name="password" type="password" autocomplete="on" placeholder="Password" />
                     </div>
                     <div class="mb-3 col-sm-6">
-                      <input class="form-control" type="password" autocomplete="on" placeholder="Confirm Password" />
+                      <input class="form-control" name="confirm_password" type="password" autocomplete="on" placeholder="Confirm Password" />
                     </div>
                   </div>
                   <div class="form-check">
